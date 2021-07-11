@@ -5,10 +5,17 @@ const cheerio = require('cheerio');
 const newWorks = [];
 
 (async () => {
-    if (newWorks.length == 0) {
-        continue;
-    } else {
-        newWorks.splice(0, newWorks.length)
+    //potentially wont work if running multiple times a day
+    if (newWorks.length !== 0) {
+        for(let i=0; i < newWorks.length; i++) {
+            let now = new Date()
+            let month = now.toLocaleString('default', {month: 'short'})
+            let euroDate = now.getDate() + " " + month + " " + now.getFullYear()
+            if (newWorks[i].time !== euroDate) {
+                newWorks.splice(i, 1)
+            }
+        }
+        // newWorks.splice(0, newWorks.length)
     }
     const browser = await puppeteer.launch()
 
@@ -56,7 +63,7 @@ const newWorks = [];
         let euroDate = now.getDate() + " " + month + " " + now.getFullYear()
         console.log(euroDate, "EURO", worksData.time, "WORKDATA")
         //if euroDate and worksdata.time ==
-        if (euroDate == worksdata.time) {
+        if (euroDate == worksData.time) {
             //then compare worksdata.author to a list of authors from server
             for (let i = 0; i < authors.length; i++) {
                 if (worksData.author == authors[i]){
